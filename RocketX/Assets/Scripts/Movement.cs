@@ -1,21 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    private Rigidbody rb;
+    Rigidbody rb;
     [SerializeField] private float boostSpeed = 800f;
     [SerializeField] private float rotationSpeed = 100f;
     
-    // Start is called before the first frame update
+    AudioSource audioSource;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        
+        //Fetch the AudioSource from the GameObject
+        audioSource = GetComponent<AudioSource>();
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         ProcessBoost();
@@ -27,6 +27,16 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             rb.AddRelativeForce(Vector3.up * boostSpeed * Time.deltaTime);
+            
+            // Play sound only if we're not already playing
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            audioSource.Stop();
         }
     }
 
