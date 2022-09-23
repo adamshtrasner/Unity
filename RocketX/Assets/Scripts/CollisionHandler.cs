@@ -4,6 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
+    int currentSceneIndex;
+    [SerializeField] float delayTime = 0.5f;
+    
     void OnCollisionEnter(Collision other)
     {
         switch (other.gameObject.tag)
@@ -12,17 +15,39 @@ public class CollisionHandler : MonoBehaviour
                 print("It's Friendly");
                 break;
             case "Finish":
-                print("Its the Finish Pad");
+                ProcessSuccess();
                 break;
             default:
-                ReloadLevel();
+                ProcessFailure();
                 break;
         }
     }
 
+    void ProcessFailure()
+    {
+        GetComponent<Movement>().enabled = false;
+        Invoke("ReloadLevel", delayTime);
+    }
+
+    void ProcessSuccess()
+    {
+        GetComponent<Movement>().enabled = false;
+        Invoke("LoadNextLevel", delayTime);
+    }
+
     void ReloadLevel()
     {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    void LoadNextLevel()
+    {
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0;
+        }
+        SceneManager.LoadScene(nextSceneIndex);
     }
 }
