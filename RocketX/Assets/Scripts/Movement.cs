@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    Rigidbody rb;
     [SerializeField] private float boostSpeed = 800f;
     [SerializeField] private float rotationSpeed = 100f;
+    [SerializeField] private AudioClip EngineBoost;
     
+    Rigidbody rb;
     AudioSource audioSource;
     
     void Start()
@@ -31,7 +32,7 @@ public class Movement : MonoBehaviour
             // Play sound only if we're not already playing
             if (!audioSource.isPlaying)
             {
-                audioSource.Play();
+                audioSource.PlayOneShot(EngineBoost);
             }
         }
         else
